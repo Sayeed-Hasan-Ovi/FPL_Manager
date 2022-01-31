@@ -1,0 +1,9 @@
+<% console.log(players) %>
+<div class="container-sm">
+    <% for(let i = 0;i < players.length;i++){ %>
+        <div class="shadow card m-2 p-3">
+            <h1><%=players[i].FIRST_NAME%> ekta khaneki magi</h1>
+            <a class="btn btn-secondary" href=<%="/player/"+players[i].P_ID%> >View Details</a>
+        </div>
+    <% } %>
+</div>
