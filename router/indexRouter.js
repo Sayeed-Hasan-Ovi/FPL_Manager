@@ -10,6 +10,7 @@ const DB_player = require('../DB-codes/DB-player-api');
 //
 // // sub-routers
 const playerRouter = require('./player/player');
+const adminRouter= require('./admin/admin_router')
 // const loginRouter = require('./auth/login');
 // const logoutRouter = require('./auth/logout');
 // const userRouter = require('./users/users.js');
@@ -39,9 +40,9 @@ router.get('/', async (req, res) =>{
     const playerResult = await DB_player.getAllPlayers();
 
     res.render('layout.ejs', {
-        title: 'ForceCodes',
+        title: 'Fantasy Premier League',
         players:playerResult,
-        body : 'playerComponent',
+        body : 'homepage',
         // user: req.user,
         // blogs : blogs,
         // rightPanel : rightPanel
@@ -50,17 +51,7 @@ router.get('/', async (req, res) =>{
 
 // setting up sub-routers
 router.use('/player', playerRouter);
-// router.use('/login', loginRouter);
-// router.use('/logout', logoutRouter);
-// router.use('/users', userRouter);
-// router.use('/profile', profileRouter);
-// router.use('/blog', blogRouter);
-// router.use('/country', countryRouter);
-// router.use('/contest', contestRouter);
-// router.use('/api', apiRouter);
-// router.use('/problems', problemsRouter);
-// router.use('/team', teamsRouter);
-// router.use('/about', aboutRouter);
+router.use('/admin', adminRouter);
 
 
 module.exports = router
