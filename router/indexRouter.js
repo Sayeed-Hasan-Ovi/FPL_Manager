@@ -4,7 +4,7 @@ const marked = require('marked');
 
 const router = express.Router({mergeParams : true});
 
-const DB_player = require('../DB-codes/DB-player-api');
+const DB_player = require('../DB-codes/db_player_api');
 //
 // const blogUtils = require(process.env.ROOT + '/utils/blog-utils');
 //

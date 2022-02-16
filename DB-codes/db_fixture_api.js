@@ -24,22 +24,7 @@ async function getFixtureById(id){
     };
     return (await database.execute(sql, binds, database.options)).rows;
 }
-async function insertFixtureByDetails(home, away, season, gw, kickoff){
-    let sql = `
-        INSERT INTO 
-            fixture (SEASON, GAME_WEEK, TEAM_A_ID, TEAM_H_ID, KICK_OFF)
-        VALUES 
-               (:season,:gw,:away_id ,:home_id, TO_DATE(:kickoff, 'YYYY-MM-DD HH:MI'))
-    `;
-    let binds = {
-        season:season,
-        gw:gw,
-        away_id: away,
-        home_id: home,
-        kickoff:kickoff
-    };
-    return (await database.execute(sql, binds, database.options));
-}
+
 async function getFixtureByDetails(home, away, season, gw){
     let sql = `
         SELECT *
@@ -57,13 +42,49 @@ async function getFixtureByDetails(home, away, season, gw){
     };
     return (await database.execute(sql, binds, database.options)).rows;
 }
-
-
+async function insertFixtureByDetails(home, away, season, gw, kickoff){
+    let sql = `
+        INSERT INTO 
+            fixture (SEASON, GAME_WEEK, TEAM_A_ID, TEAM_H_ID, KICK_OFF)
+        VALUES 
+               (:season,:gw,:away_id ,:home_id, TO_DATE(:kickoff, 'YYYY-MM-DD HH:MI'))
+    `;
+    let binds = {
+        season:season,
+        gw:gw,
+        away_id: away,
+        home_id: home,
+        kickoff:kickoff
+    };
+    return (await database.execute(sql, binds, database.options));
+}
+async function updateFixtureByDetails(home, away, season, gw, home_score, away_score){
+    let sql = `
+        UPDATE 
+            FIXTURE
+        SET 
+            TEAM_A_SCORE=:away_score, TEAM_H_SCORE=:home_score
+        WHERE TEAM_H_ID = :home
+            AND TEAM_A_ID = :away
+            AND SEASON = :season
+            AND GAME_WEEK = :gw 
+    `;
+    let binds = {
+        season:season,
+        gw:gw,
+        away: away,
+        home: home,
+        away_score: away_score,
+        home_score: home_score
+    };
+    return (await database.execute(sql, binds, database.options));
+}
 
 module.exports = {
     getAllFixture,
     getFixtureById,
     getFixtureByDetails,
-    insertFixtureByDetails
+    insertFixtureByDetails,
+    updateFixtureByDetails //needs stat
 
 }

@@ -2,12 +2,12 @@
     <div class="col-md-6 m-auto">
         <div class="card card-body">
             <% if (typeof (error) != 'undefined') { %>
-            <%for (let i=0; i<error.length; i++){%>
-            <h5><%=error[i].message%></h5>
-            <%}%>
+                <%for (let i=0; i<error.length; i++){%>
+                    <h5><%=error[i].message%></h5>
+                <%}%>
             <% } %>
-            <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Create fixture</h1>
-            <form action="/admin/create_fixture" method="POST">
+            <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Update Fixture</h1>
+            <form action="/admin/update_fixture" method="POST">
                 <div class="form-group">
                     <label for="home_team">
                         Home team name
@@ -57,19 +57,33 @@
                     />
                 </div>
                 <div class="form-group">
-                    <label for="kickoff_time">
-                        Kickoff time
+                    <label for="home_score">
+                        Home score
                     </label>
                     <input
-                            type="datetime-local"
-                            id="kickoff_time"
-                            name="kickoff"
+                            type="number"
+                            id="home_score"
+                            name="home_score"
                             class="form-control"
-                            placeholder="Enter kickoff time"
+                            placeholder="Enter home score"
                     />
                 </div>
+                <div class="form-group">
+                    <label for="away_score">
+                        Away score
+                    </label>
+                    <input
+                            type="number"
+                            id="away_score"
+                            name="away_score"
+                            class="form-control"
+                            placeholder="Enter away score"
+                    />
+                </div>
+
+
                 <div class="pull-right">
-                    <button class="btn-info btn">Create Team</button>
+                    <button class="btn-info btn">Update Fixture</button>
                 </div>
             </form>
         </div>
