@@ -22,7 +22,7 @@ router.get('/create_fixture', async (req, res) => {
 })
 
 router.post('/create_fixture', async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
     let {home, away, season, gw, kickoff} = req.body;
     kickoff = moment.utc(kickoff).format('yyyy-MM-DD HH:mm');
@@ -110,7 +110,7 @@ router.get('/update_fixture', async (req, res) => {
 })
 
 router.post('/update_fixture', async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
     let {home, away, season, gw, home_score, away_score} = req.body;
     let error = [];

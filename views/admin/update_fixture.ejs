@@ -3,7 +3,8 @@
         <div class="card card-body">
             <% if (typeof (error) != 'undefined') { %>
                 <%for (let i=0; i<error.length; i++){%>
-                    <h5><%=error[i].message%></h5>
+                <div class="alert alert-dark" role="alert">
+                    <%=error[i].message%></div>
                 <%}%>
             <% } %>
             <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Update Fixture</h1>
