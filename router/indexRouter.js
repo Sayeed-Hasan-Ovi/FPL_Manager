@@ -3,14 +3,17 @@ const express = require('express');
 const marked = require('marked');
 
 const router = express.Router({mergeParams : true});
+const auth = require('./auth/ensureAuth')
 
 const DB_player = require('../DB-codes/db_player_api');
 //
 // const blogUtils = require(process.env.ROOT + '/utils/blog-utils');
 //
 // // sub-routers
-const playerRouter = require('./player/player');
+// const playerRouter = require('./player/player');
 const adminRouter= require('./admin/admin_router')
+const authRouter= require('./auth/authenticate')
+const userRouter= require('./user/user')
 // const loginRouter = require('./auth/login');
 // const logoutRouter = require('./auth/logout');
 // const userRouter = require('./users/users.js');
@@ -50,8 +53,9 @@ router.get('/', async (req, res) =>{
 });
 
 // setting up sub-routers
-router.use('/player', playerRouter);
+// router.use('/player', playerRouter);
 router.use('/admin', adminRouter);
-
+router.use('/auth',authRouter);
+router.use('/user',auth.authenticated, userRouter);
 
 module.exports = router
