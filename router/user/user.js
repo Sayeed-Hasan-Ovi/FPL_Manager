@@ -10,4 +10,22 @@ router.get('/', async (req, res) => {
     })
 });
 
+router.get('/user_team',async(req, res)=>{
+    res.render('layout.ejs',{
+        title: 'User team',
+        body: 'user/user_team',
+        user: req.user
+    })
+})
+
+router.get('/edit_team',async(req, res)=>{
+    res.render('layout.ejs',{
+        title: 'User team edit',
+        body: 'user/edit_team',
+        user: req.user
+    })
+})
+
+
+
 module.exports = router;
