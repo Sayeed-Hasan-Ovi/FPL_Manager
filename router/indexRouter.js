@@ -12,6 +12,7 @@ const playerRouter = require('./player/player');
 const adminRouter= require('./admin/admin_router')
 const authRouter= require('./auth/authenticate')
 const userRouter= require('./user/user')
+const teamRouter= require('./team/team_router')
 //
 // const rightPanelUtils = require('../utils/rightPanel-utils');
 
@@ -32,7 +33,9 @@ router.get('/', async (req, res) =>{
 // setting up sub-routers
 router.use('/player', playerRouter);
 router.use('/admin', adminRouter);
-router.use('/auth',authRouter);
+router.use('/auth', authRouter);
 router.use('/user',auth.authenticated, userRouter);
+router.use('/team', teamRouter);
+
 
 module.exports = router
