@@ -52,7 +52,17 @@ async function getTotalPointsById(id){
     return (await database.execute(sql, binds, database.options)).rows;
 }
 
-
+async function getPlayerByPosition(pos){
+    let sql = `
+        SELECT ID, ( FIRST_NAME || ' ' || LAST_NAME ) name, position, ( FIRST_NAME || ' ' || LAST_NAMe || ' (' || ( SELECT name FROM team WHERE id = ( SELECT T_ID FROM plays WHERE Player.ID = PLAYS.P_ID ) ) || ')' ) display 
+        FROM player 
+        WHERE POSITION = :pos    
+    `;
+    let binds = {
+        pos:pos
+    };
+    return (await database.execute(sql, binds, database.options)).rows;
+}
 
 
 
@@ -60,6 +70,7 @@ module.exports = {
     getAllPlayers,
     getPlayerById,
     getTeamByPlayerId,
-    getTotalPointsById
+    getTotalPointsById,
+    getPlayerByPosition
 
 }

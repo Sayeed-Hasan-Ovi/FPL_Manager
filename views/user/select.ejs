@@ -1,0 +1,99 @@
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <div class="card card-body">
+            <div class="container">
+
+                <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Select team</h1>
+
+                <h2 class="text center mb-3"><b>Formation chosen:</b> <%=frm%></h2>
+                <form action='/user/select' method="POST">
+                    <strong>Goalkeeper</strong>
+                    <div class="form-group">
+                        <label for="gkp_pick">
+                            Select Goalkeeper
+                        </label>
+                        <input
+                                type="search"
+                                list="search-option-gkp"
+                                id="gkp_pick"
+                                name="gkp_pick"
+                                class="form-control"
+                                placeholder="Enter GKP"
+                        />
+                        <datalist id="search-option-gkp">
+                            <% for (let i = 0; i < gkplist.length; i++) { %>
+                                <option value=<%= gkplist[i].display %>></option>
+                            <% } %>
+                        </datalist>
+                    </div>
+                    <strong>Defender</strong>
+                    <% for (let i = 0; i < def; i++) { %>
+                    <div class="form-group">
+                        <label for="def_pick<%i%>">
+                            Select Defender
+                        </label>
+                        <input
+                                type="search"
+                                list="search-option-def"
+                                id="def_pick<%i%>"
+                                name="def_pick<%i%>"
+                                class="form-control"
+                                placeholder="Enter DEF"
+                        />
+                        <datalist id="search-option-def">
+                            <% for (let i = 0; i < deflist.length; i++) { %>
+                                <option value=<%= deflist[i] %>></option>
+                            <% } %>
+                        </datalist>
+                    </div>
+                    <%}%>
+                    <strong>Midfielder</strong>
+                    <% for (let i = 0; i < mid; i++) { %>
+                    <div class="form-group">
+                        <label for="mid_pick<%i%>">
+                            Select Midfielder
+                        </label>
+                        <input
+                                type="search"
+                                list="search-option-mid"
+                                id="mid_pick<%i%>"
+                                name="mid_pick<%i%>"
+                                class="form-control"
+                                placeholder="Enter MID"
+                        />
+                        <datalist id="search-option-mid">
+                            <% for (let i = 0; i < midlist.length; i++) { %>
+                                <option value=<%= midlist[i] %>></option>
+                            <% } %>
+                        </datalist>
+                    </div>
+                    <%}%>
+                    <strong>Forward</strong>
+                    <% for (let i = 0; i < fwd; i++) { %>
+                    <div class="form-group">
+                        <label for="fwd_pick<%i%>">
+                            Select Forward
+                        </label>
+                        <input
+                                type="search"
+                                list="search-option-fwd"
+                                id="fwd_pick<%i%>"
+                                name="fwd_pick<%i%>"
+                                class="form-control"
+                                placeholder="Enter FWD"
+                        />
+                        <datalist id="search-option-fwd">
+                            <% for (let i = 0; i < fwdlist.length; i++) { %>
+                                <option value= "<%= fwdlist[i].DISPLAY %>"></option>
+                            <% } %>
+                        </datalist>
+                    </div>
+                    <%}%>
+
+                    <button class="btn-info btn right-aligned-btn">Choose players</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

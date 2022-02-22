@@ -526,9 +526,13 @@ router.get('/insert_player', async (req, res) => {
 
 router.post('/insert_player', async (req, res) => {
     console.log(req.body);
+    let error=[]
+
 
 
 })
 
+
+//update player (price)
 
 module.exports = router;
