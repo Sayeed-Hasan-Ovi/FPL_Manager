@@ -47,7 +47,7 @@ async function insertFixtureByDetails(home, away, season, gw, kickoff){
         INSERT INTO 
             fixture (SEASON, GAME_WEEK, TEAM_A_ID, TEAM_H_ID, KICK_OFF)
         VALUES 
-               (:season,:gw,:away_id ,:home_id, TO_DATE(:kickoff, 'YYYY-MM-DD HH:MI'))
+               (:season,:gw,:away_id ,:home_id, TO_DATE(:kickoff, 'YYYY-MM-DD HH24:MI'))
     `;
     let binds = {
         season:season,
@@ -58,12 +58,12 @@ async function insertFixtureByDetails(home, away, season, gw, kickoff){
     };
     return (await database.execute(sql, binds, database.options));
 }
-async function updateFixtureByDetails(home, away, season, gw, home_score, away_score){
+async function updateFixtureByDetails(home, away, season, gw, home_score, away_score, goal_scorer, assist, goal_conceded, own_goal, penalty_miss, penalty_save, red_card, yellow_card, clean_sheet){
     let sql = `
         UPDATE 
             FIXTURE
         SET 
-            TEAM_A_SCORE=:away_score, TEAM_H_SCORE=:home_score
+            TEAM_A_SCORE=:away_score, TEAM_H_SCORE=:home_score, GOAL_SCORED=:goal_scorer, ASSISTS=:assist, GOAL_CONCEDED=:goal_conceded, OWN_GOAL=:own_goal, PENALTY_MISSED=:penalty_miss, PENALTY_SAVED=:penalty_save, RED_CARD=:red_card, YELLOW_CARD=:yellow_card, CLEAN_SHEET=:clean_sheet
         WHERE TEAM_H_ID = :home
             AND TEAM_A_ID = :away
             AND SEASON = :season
@@ -75,10 +75,13 @@ async function updateFixtureByDetails(home, away, season, gw, home_score, away_s
         away: away,
         home: home,
         away_score: away_score,
-        home_score: home_score
+        home_score: home_score,
+        goal_scorer: goal_scorer, assist: assist, goal_conceded: goal_conceded, own_goal: own_goal, penalty_miss:penalty_miss, penalty_save:penalty_save, red_card:red_card, yellow_card:yellow_card, clean_sheet:clean_sheet
     };
     return (await database.execute(sql, binds, database.options));
 }
+
+
 
 module.exports = {
     getAllFixture,

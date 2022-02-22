@@ -49,8 +49,22 @@ async function insertManager(name, password){
     return (await database.execute(sql, binds,database.options));
 }
 
+async function getManagedTeamName(id){
+    let sql = `
+       select MT.name from MANAGED_TEAM MT join MANAGER M on (MT.USER_T_ID=M.ID) where M.id=:id
+    `;
+    let binds = {
+        id:id
+    };
+
+    return (await database.execute(sql, binds,database.options)).rows;
+}
+
+
+
 module.exports = {
     findManagerByName,
     findManagerById,
-    insertManager
+    insertManager,
+    getManagedTeamName
 }

@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router({mergeParams : true});
 
+const db_team = require('../../DB-codes/db_team_api')
+const db_player= require('../../DB-codes/db_player_api')
+const db_manager= require('../../DB-codes/db_manager_api')
+
+
+
 router.get('/', async (req, res) => {
     // console.log("received request from user.js")
     res.render('layout.ejs',{
@@ -10,21 +16,23 @@ router.get('/', async (req, res) => {
     })
 });
 
-router.get('/user_team',async(req, res)=>{
-    res.render('layout.ejs',{
-        title: 'User team',
-        body: 'user/user_team',
-        user: req.user
-    })
-})
-
-router.get('/edit_team',async(req, res)=>{
+router.get('/edit', async (req, res) => {
+    // console.log("received request from user.js")
     res.render('layout.ejs',{
         title: 'User team edit',
-        body: 'user/edit_team',
-        user: req.user
+        body: 'user/edit',
     })
-})
+});
+
+router.get('/view', async (req, res) => {
+    // console.log("received request from user.js")
+    res.render('layout.ejs',{
+        title: 'User team ',
+        body: 'user/view',
+    })
+});
+
+
 
 
 

@@ -17,7 +17,34 @@ async function getPlayerById(id){
             *
         FROM
             PLAYER
-        WHERE p_id = :id
+        WHERE id = :id
+    `;
+    let binds = {
+        id:id
+    };
+    return (await database.execute(sql, binds, database.options)).rows;
+}
+
+
+async function getTeamByPlayerId(id){
+    let sql = `
+        select * from TEAM
+        where id=(
+        select t_id from plays where p_id=:id
+        )
+    `;
+    let binds = {
+        id:id
+    };
+    return (await database.execute(sql, binds, database.options)).rows;
+}
+
+async function getTotalPointsById(id){
+    let sql = `
+        select P.ID, sum(ps.TOTAL_POINTS) tpoints
+        from PLAYER P JOIN PLAYER_STAT PS ON (P.ID=PS.P_ID)
+        where p.id=:id
+        GROUP BY p.id
     `;
     let binds = {
         id:id
@@ -28,8 +55,11 @@ async function getPlayerById(id){
 
 
 
+
 module.exports = {
     getAllPlayers,
-    getPlayerById
+    getPlayerById,
+    getTeamByPlayerId,
+    getTotalPointsById
 
 }

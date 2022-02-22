@@ -4,16 +4,23 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="/auth/logout">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" href="/player">All players</a></li>
             </ul>
         </div>
     </div>
 </nav>
-<div class="container">
-<h1>this is user home</h1>
-<h2><%= username %></h2>
 
-<p class="lead mt-4"><a href="/user/view">View Team</a>
-
-<p class="lead mt-4"><a href="/user/edit">Edit Team</a>
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <div class="container">
+            <div class="card shadow m-2 p-2">
+                <h3 align="center"><%=player.FIRST_NAME%> <%=player.LAST_NAME%></h3>
+                <b>First Name: </b><%=player.FIRST_NAME%>
+                <b>Last Name: </b><%=player.LAST_NAME%>
+                <b>Position: </b><%=player.POSITION%>
+                <b>Team:</b> <%=team.NAME%>
+                <b>Total points:</b><%=playertotalpoints.TPOINTS%>
+            </div>
+        </div>
+    </div>
 </div>

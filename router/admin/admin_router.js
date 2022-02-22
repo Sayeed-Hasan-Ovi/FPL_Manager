@@ -6,7 +6,8 @@ const router = express.Router({mergeParams: true});
 
 const db_team = require('../../DB-codes/db_team_api')
 const db_fixture = require('../../DB-codes/db_fixture_api')
-const db_player = require('../../DB-codes/db_player_api')
+const db_player_stat = require('../../DB-codes/db_player_stat_api')
+const db_player= require('../../DB-codes/db_player_api')
 
 router.get('/', async (req, res) => {
     res.render('layout.ejs', {
@@ -112,7 +113,7 @@ router.get('/update_fixture', async (req, res) => {
 router.post('/update_fixture', async (req, res) => {
     // console.log(req.body);
 
-    let {home, away, season, gw, home_score, away_score} = req.body;
+    let {home, away, season, gw, home_score, away_score, goal_scorer, assist, goal_conceded, own_goal, penalty_miss, penalty_save, red_card, yellow_card, clean_sheet} = req.body;
     let error = [];
     if (!home || !away || !season || !gw || !home_score || !away_score || home === away) {
         error.push({
@@ -172,9 +173,334 @@ router.post('/update_fixture', async (req, res) => {
             error: error
         })
     }
-    const fixture_updated = await db_fixture.updateFixtureByDetails(home_team.ID,away_team.ID,season,gw, home_score, away_score);
+    //eta niche jaabe, niche gese
+    //goal scorer der hishab
+    let goal_scorer_list =  goal_scorer.split(',')
 
-    if (fixture_updated.rowsAffected > 0){
+    for (let i = 0; i < goal_scorer_list.length; i++) {
+        goal_scorer_list[i]=parseInt(goal_scorer_list[i],10)
+        if (isNaN(goal_scorer_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(goal_scorer_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const goal_updated = await db_player_stat.updateGoalScoredByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (goal_updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+    }
+
+//assist der hishab
+    let assist_list =  assist.split(',')
+
+    for (let i = 0; i < assist_list.length; i++) {
+        assist_list[i]=parseInt(assist_list[i],10)
+        if (isNaN(assist_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(assist_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const assist_updated = await db_player_stat.updateAssistsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (assist_updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+    }
+
+//conceded der hishab
+    let conceded_list =  goal_conceded.split(',')
+
+    for (let i = 0; i < conceded_list.length; i++) {
+        conceded_list[i]=parseInt(conceded_list[i],10)
+        if (isNaN(conceded_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(conceded_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const conceded_updated = await db_player_stat.updateGoalConcededByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (conceded_updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+    }
+
+// //og der hishab
+    let og_list =  own_goal.split(',')
+
+    for (let i = 0; i < og_list.length; i++) {
+        og_list[i]=parseInt(og_list[i],10)
+        if (isNaN(og_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(og_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const updated = await db_player_stat.updateOwnGoalByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+    }
+
+
+//pen miss er hishab
+    let pen_miss_list =  penalty_miss.split(',')
+
+    for (let i = 0; i < pen_miss_list.length; i++) {
+        pen_miss_list[i]=parseInt(pen_miss_list[i],10)
+        if (isNaN(pen_miss_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(pen_miss_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const updated = await db_player_stat.updatePenaltyMissedByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+    }
+//og der hishab
+    let pen_save_list =  penalty_save.split(',')
+
+    for (let i = 0; i < pen_save_list.length; i++) {
+        pen_save_list[i]=parseInt(pen_save_list[i],10)
+        if (isNaN(pen_save_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(pen_save_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const updated = await db_player_stat.updatePenaltySavedByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+    }
+    //og der hishab
+    let yellow_list = yellow_card.split(',')
+
+    for (let i = 0; i < yellow_list.length; i++) {
+        yellow_list[i]=parseInt(yellow_list[i],10)
+        if (isNaN(yellow_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(yellow_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const updated = await db_player_stat.updateYellowCardByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+    }
+//og der hishab
+    let red_list =  red_card.split(',')
+
+    for (let i = 0; i < red_list.length; i++) {
+        red_list[i]=parseInt(red_list[i],10)
+        if (isNaN(red_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(red_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const updated = await db_player_stat.updateRedCardByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+    }
+    //og der hishab
+    let cs_list =  clean_sheet.split(',')
+
+    for (let i = 0; i < cs_list.length; i++) {
+        cs_list[i]=parseInt(cs_list[i],10)
+        if (isNaN(cs_list[i])) { break; }
+        let player_exists = await db_player.getPlayerById(cs_list[i])
+        if (player_exists.length === 0) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        const statline_exists= await db_player_stat.getPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (statline_exists.length===0)
+        {
+            await db_player_stat.insertPlayerStatByFixtureId(player_exists[0].ID, fixture_exists[0].ID);
+        }
+        const updated = await db_player_stat.updateCleanSheetByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+        if (updated.rowsAffected!==1 ) {
+            error.push({
+                message: 'The player is not present in database'
+            })
+            return res.render('layout.ejs', {
+                title: 'ERROR',
+                body: 'admin/update_fixture',
+                error: error
+            })
+        }
+        await db_player_stat.updateTotalPointsByFixtureId(player_exists[0].ID, fixture_exists[0].ID)
+
+    }
+
+
+    const fixture_updated = await db_fixture.updateFixtureByDetails(home_team.ID,away_team.ID,season,gw, home_score, away_score, goal_scorer, assist, goal_conceded, own_goal, penalty_miss, penalty_save, red_card, yellow_card, clean_sheet);
+
+
+    if (fixture_updated.rowsAffected === 1){
         return res.redirect('/admin');
     }
     error.push({
