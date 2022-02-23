@@ -518,15 +518,89 @@ router.post('/update_fixture', async (req, res) => {
 //insert player
 
 router.get('/insert_player', async (req, res) => {
+    console.log(req.query)
     res.render('layout.ejs', {
         title: 'Insert Player',
         body: 'admin/insert_player'
     })
 })
 
+
+
 router.post('/insert_player', async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     let error=[]
+    let {first_name, last_name, team_name, season, position} = req.body;
+    if (!first_name || !last_name || !season || !team_name || !position) {
+        error.push({
+            message: 'Please fill up the form correctly'
+        });
+    }
+    const s = season.split('-');
+
+    let y1 = s[0];
+    let y2 = s[1];
+    y1 = parseInt(y1, 10);
+    y2 = parseInt(y2, 10);
+    if (y2 - y1 !== 1 || y1 < 2000 || y1 > 3000 || y2 < 2000 || y2 > 3000
+        || (position!=='FWD'&& position!=='DEF'&& position!=='MID'&& position!=='GKP')) {
+        error.push({
+            message: 'Input data correctly'
+        })
+    }
+
+    if (error.length > 0) {
+        return res.render('layout.ejs', {
+            title: 'ERROR',
+            body: 'admin/insert_player',
+            error: error
+        })
+    }
+    const home_result = await db_team.getTeamByName(team_name);
+
+    if (home_result.length !== 1) {
+        error.push({
+            message: 'The team is not present in database'
+        })
+
+        return res.render('layout.ejs', {
+            title: 'ERROR',
+            body: 'admin/insert_player',
+            error: error
+        })
+    }
+    const player_exists= await db_player.getPlayerByDetails(first_name,last_name,position,team_name)
+    if (player_exists.length > 0) {
+        error.push({
+            message: 'The player is already present in database'
+        })
+
+        return res.render('layout.ejs', {
+            title: 'ERROR',
+            body: 'admin/insert_player',
+            error: error
+        })
+    }
+    // console.log(first_name, last_name, team_name, season, position)
+    const player_inserted = await db_player.insertPlayerByDetails(first_name, last_name, position)
+    const player_exists2 = await db_player.getPlayerByDetailsWithoutTeam(first_name,last_name,position)
+
+
+    const plays_inserted = await db_player.updatePlays(player_exists2[0].ID,team_name,season);
+
+    if (player_inserted.rowsAffected > 0){
+        return res.redirect('/admin');
+    }
+    error.push({
+        message: 'Some database error occurred'
+    })
+
+    res.render('layout.ejs', {
+        title: 'Error',
+        body: 'admin/insert_player',
+        error : error
+    })
+
 
 
 
@@ -534,5 +608,120 @@ router.post('/insert_player', async (req, res) => {
 
 
 //update player (price)
+router.get('/update_price', async (req, res) => {
+    res.render('layout.ejs', {
+        title: 'Update Player Price',
+        body: 'admin/update_price'
+    })
+})
+
+router.post('/update_price', async (req, res) => {
+
+    // console.log(req.body)
+
+    let {first_name, last_name, team_name, season, position, price} = req.body; let error=[];
+    if (!first_name || !last_name || !season || !team_name || !position || !price) {
+        error.push({
+            message: 'Please fill up the form correctly'
+        });
+    }
+    const s = season.split('-');
+
+    let y1 = s[0];
+    let y2 = s[1];
+    y1 = parseInt(y1, 10);
+    y2 = parseInt(y2, 10);
+    if (y2 - y1 !== 1 || y1 < 2000 || y1 > 3000 || y2 < 2000 || y2 > 3000 ||
+        price < 4 || price > 14
+        || (position!=='FWD'&& position!=='DEF'&& position!=='MID'&& position!=='GKP')) {
+        error.push({
+            message: 'Input data correctly'
+        })
+    }
+
+    if (error.length > 0) {
+        return res.render('layout.ejs', {
+            title: 'ERROR',
+            body: 'admin/update_price',
+            error: error
+        })
+    }
+    const home_result = await db_team.getTeamByName(team_name);
+
+    if (home_result.length !== 1) {
+        error.push({
+            message: 'The team is not present in database'
+        })
+
+        return res.render('layout.ejs', {
+            title: 'ERROR',
+            body: 'admin/update_price',
+            error: error
+        })
+    }
+    const player_exists= await db_player.getPlayerByDetails(first_name,last_name,position,team_name)
+    if (player_exists.length !== 1) {
+        error.push({
+            message: 'The player is not present in database'
+        })
+
+        return res.render('layout.ejs', {
+            title: 'ERROR',
+            body: 'admin/update_price',
+            error: error
+        })
+    }
+    // console.log(first_name, last_name, team_name, season, position)
+
+    const price_updated= await db_player.updatePrice(player_exists[0].ID, season, price)
+console.log(price_updated.rowsAffected)
+    if (price_updated.rowsAffected > 0){
+        return res.redirect('/admin');
+    }
+    error.push({
+        message: 'Some database error occurred'
+    })
+
+    res.render('layout.ejs', {
+        title: 'Error',
+        body: 'admin/update_price',
+        error : error
+    })
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//data parsing admin side
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;

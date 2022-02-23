@@ -31,7 +31,7 @@
                     <tr>
                         <td><a href="/player/<%=player[i].ID%>"><%=player[i].FIRST_NAME%> <%=player[i].LAST_NAME%></a></td>
                         <td><%=player[i].POSITION%></td>
-                        <td><%=team[i].NAME%></td>
+                        <td><% if (typeof (team[i][0]) != 'undefined') { %><%=team[i][0].NAME%><%}else {%>N/A<%}%>%> </td>
                     </tr>
                     <%}%>
                     </tbody>

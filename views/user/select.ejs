@@ -1,6 +1,12 @@
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
         <div class="card card-body">
+            <% if (typeof (error) != 'undefined') { %>
+            <%for (let i=0; i<error.length; i++){%>
+            <div class="alert alert-dark" role="alert">
+                <%=error[i].message%></div>
+            <%}%>
+            <% } %>
             <div class="container">
 
                 <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Select team</h1>
@@ -22,7 +28,7 @@
                         />
                         <datalist id="search-option-gkp">
                             <% for (let i = 0; i < gkplist.length; i++) { %>
-                                <option value=<%= gkplist[i].display %>></option>
+                                <option value="<%= gkplist[i].DISPLAY %>"></option>
                             <% } %>
                         </datalist>
                     </div>
@@ -42,7 +48,7 @@
                         />
                         <datalist id="search-option-def">
                             <% for (let i = 0; i < deflist.length; i++) { %>
-                                <option value=<%= deflist[i] %>></option>
+                                <option value="<%= deflist[i].DISPLAY %>"></option>
                             <% } %>
                         </datalist>
                     </div>
@@ -63,7 +69,7 @@
                         />
                         <datalist id="search-option-mid">
                             <% for (let i = 0; i < midlist.length; i++) { %>
-                                <option value=<%= midlist[i] %>></option>
+                                <option value="<%= midlist[i].DISPLAY %>"></option>
                             <% } %>
                         </datalist>
                     </div>
