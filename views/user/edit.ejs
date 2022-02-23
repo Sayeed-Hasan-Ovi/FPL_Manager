@@ -1,6 +1,12 @@
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
         <div class="card card-body">
+            <% if (typeof (error) != 'undefined') { %>
+            <%for (let i=0; i<error.length; i++){%>
+            <div class="alert alert-dark" role="alert">
+                <%=error[i].message%></div>
+            <%}%>
+            <% } %>
             <div class="container">
 
                 <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>Enter formation:</h1>

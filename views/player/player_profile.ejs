@@ -18,8 +18,8 @@
                 <b>First Name: </b><%=player.FIRST_NAME%>
                 <b>Last Name: </b><%=player.LAST_NAME%>
                 <b>Position: </b><%=player.POSITION%>
-                <b>Team:</b> <%=team.NAME%>
-                <b>Total points:</b><%=playertotalpoints.TPOINTS%>
+                <b>Team:</b>  <% if (typeof (team) != 'undefined') { %><%=team.NAME%><%}else {%>N/A<%}%>
+                <b>Total points:</b> <% if (typeof (playertotalpoints) != 'undefined') { %><%=playertotalpoints.TPOINTS%><%}else {%>0<%}%>
             </div>
         </div>
     </div>
