@@ -8,6 +8,7 @@ const db_team = require('../../DB-codes/db_team_api')
 const db_fixture = require('../../DB-codes/db_fixture_api')
 const db_player_stat = require('../../DB-codes/db_player_stat_api')
 const db_player= require('../../DB-codes/db_player_api')
+const db_manager= require('../../DB-codes/db_manager_api')
 
 router.get('/', async (req, res) => {
     res.render('layout.ejs', {
@@ -19,6 +20,27 @@ router.get('/create_fixture', async (req, res) => {
     res.render('layout.ejs', {
         title: 'Create Fixture',
         body: 'admin/create_fixture'
+    })
+})
+router.get('/update_points', async (req, res) => {
+        res.render('layout.ejs', {
+        title: 'Enter only if GW is over',
+        body: 'admin/update_points'
+    })
+})
+
+router.post('/update_points', async (req, res) => {
+    let {gw}=req.body
+    const all_manager=await db_manager.getAllManager()
+    console.log(all_manager[0].M_ID)
+
+    for (let i = 0; i < all_manager.length; i++) {
+        const points_totalled = await db_player_stat.calculateUserPoints(all_manager[i].M_ID, gw)
+    }
+
+    res.render('layout.ejs', {
+        title: 'Points updated',
+        body: 'admin/home'
     })
 })
 
@@ -687,6 +709,21 @@ console.log(price_updated.rowsAffected)
         body: 'admin/update_price',
         error : error
     })
+
+    if (price_updated.rowsAffected > 0){
+        return res.redirect('/admin');
+    }
+    error.push({
+        message: 'Some database error occurred'
+    })
+
+    res.render('layout.ejs', {
+        title: 'Error',
+        body: 'admin/update_price',
+        error : error
+    })
+
+
 
 
 })

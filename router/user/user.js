@@ -4,6 +4,10 @@ const formation=['3-4-3','3-5-2','4-3-3','4-4-2','4-5-1','5-3-2','5-4-1']
 const db_team = require('../../DB-codes/db_team_api')
 const db_player= require('../../DB-codes/db_player_api')
 const db_manager= require('../../DB-codes/db_manager_api')
+const {getGameweek} = require("../../DB-codes/db_player_stat_api");
+const moment = require("moment");
+const {getDrafted, getManagedTeamName} = require("../../DB-codes/db_manager_api");
+const {getPlayerById} = require("../../DB-codes/db_player_api");
 
 
 
@@ -148,7 +152,7 @@ router.post('/select', async (req,res)=>{
     for (let i = 0; i < fl; i++) {
         let fwd = fwd_pick[i].split('(')
         fwd_name.push(fwd[0])
-        let temp= fwd[i].split(')')
+        let temp= fwd[1].split(')')
         fwd_team.push(temp[0])
         names.push(fwd_name[i])
         teams.push(fwd_team[i])
@@ -225,6 +229,28 @@ router.post('/select', async (req,res)=>{
         })
     }
 
+    const gameweek_data= await getGameweek();
+
+    const gw_id=gameweek_data[0].GW_ID
+
+    const team_inserted= await db_manager.insertIntoDrafted(req.user.ID,gw_id , '2021-2022', player_data[1][0].ID, player_data[2][0].ID, player_data[3][0].ID, player_data[4][0].ID, player_data[5][0].ID, player_data[6][0].ID, player_data[7][0].ID, player_data[8][0].ID, player_data[9][0].ID, player_data[10][0].ID, player_data[0][0].ID)
+
+    if (team_inserted.rowsAffected === 1){
+        return res.redirect('/user/view_team');
+    }
+    error.push({
+        message: 'Some database error occurred'
+    })
+
+    res.render('layout.ejs', {
+        title: 'Error',
+        body: 'user/edit',
+        error : error,
+        formation
+    })
+
+
+
 
 
 
@@ -237,8 +263,65 @@ router.get('/view', async (req, res) => {
     res.render('layout.ejs',{
         title: 'User team ',
         body: 'user/view',
+        username:req.user.NAME
     })
 });
+
+
+//still debugging
+
+router.post('/view', async (req, res) => {
+    // console.log("received request from user.js")
+    let{date}=req.body
+    date = moment.utc(date).format('yyyy-MM-DD HH:mm');
+    // console.log(date, req.user.ID)
+    // const drafted_players = await getDrafted(req.user.ID, date)
+    // console.log(date, req.user.ID)
+    // const team_name = await getManagedTeamName(req.user.ID)
+    // console.log(1)
+    // const player_name1 = await getPlayerById(drafted_players[0].P1_ID)
+    // console.log(1)
+    //
+    // const player_name2 = await getPlayerById(drafted_players[0].P2_ID)
+    // console.log(1)
+    // const player_name3 = await getPlayerById(drafted_players[0].P3_ID)
+    // console.log(1)
+    // const player_name4 = await getPlayerById(drafted_players[0].P4_ID)
+    // console.log(1)
+    // const player_name5 = await getPlayerById(drafted_players[0].P5_ID)
+    // console.log(1)
+    // const player_name6 = await getPlayerById(drafted_players[0].P6_ID)
+    // console.log(1)
+    // const player_name7 = await getPlayerById(drafted_players[0].P7_ID)
+    // console.log(1)
+    // const player_name8 = await getPlayerById(drafted_players[0].P8_ID)
+    // console.log(1)
+    // const player_name9 = await getPlayerById(drafted_players[0].P9_ID)
+    // console.log(1)
+    // const player_name10 = await getPlayerById(drafted_players[0].P10_ID)
+    // console.log(1)
+    // const player_name11 = await getPlayerById(drafted_players[0].P11_ID)
+    // console.log(1)
+
+    res.render('layout.ejs',{
+        title: 'User team ',
+        body: 'user/view',
+        username: req.user.NAME,
+        team_name:team_name[0].NAME,
+        p1:player_name1[0],
+        p2:player_name2[0],
+        p3:player_name3[0],
+        p4:player_name4[0],
+        p5:player_name5[0],
+        p6:player_name6[0],
+        p7:player_name7[0],
+        p8:player_name8[0],
+        p9:player_name9[0],
+        p10:player_name10[0],p11:player_name11[0]
+
+    })
+});
+
 
 
 
