@@ -1,7 +1,7 @@
 // configuring .env variables
 require('dotenv').config();
-
 const app = require('./app');
+
 const database = require('./DB-codes/database');
 
 // need to set this for oracledb connection pool
