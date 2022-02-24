@@ -44,7 +44,7 @@ Make sure you have node and oracle installed in your device.
    password: password
    ```
 
-3.  Create a new user sa
+3.  Create a new user named c##fpl_manager
 
     ```sh
     create user c##fpl_manager identified by fpl;
@@ -56,18 +56,17 @@ Make sure you have node and oracle installed in your device.
 1. Connect to oracle as c##fpl_manager in SQL Plus
 
 2. Copy and paste from sql_dump/schemas.sql and run.
+    ```sh
+   @schemas;
+    ```
 
-3. Copy and paste from sql_dump/PLSQL.sql and run.
-
-4. Copy and paste from sql_dump/insert.sql and run.
-
-5. If no errors are shown we are good to go!
+3. Check for errors.
 
 #### One last step
 
 1. Now that everything is set, open terminal in the base directory of the repo.
 
-- Run the server
+2. Run the server
 
     ```sh
     npm run dev 
