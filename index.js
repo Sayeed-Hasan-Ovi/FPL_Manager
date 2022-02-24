@@ -1,5 +1,4 @@
 // configuring .env variables
-
 require('dotenv').config();
 
 const app = require('./app');
