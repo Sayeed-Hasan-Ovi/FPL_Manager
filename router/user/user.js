@@ -223,7 +223,7 @@ router.post('/select', async (req,res)=>{
 
     if(total_cost>75) //change korte hobe
         error.push({
-            message: 'You have exceeded your gameweek balance'
+            message: 'You have exceeded your gameweek  of 75 points'
         })
     if (error.length > 0) {
         return res.render('layout.ejs', {

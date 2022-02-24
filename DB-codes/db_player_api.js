@@ -7,6 +7,14 @@ async function getAllPlayers(){
             *
         FROM
             PLAYER
+        order by 
+    case 
+       when POSITION = 'GKP' then 1 
+       when POSITION = 'DEF' then 2
+       when POSITION = 'MID' then 3
+       when POSITION = 'FWD' then 4
+       else 5
+       end
     `;
     let binds = {};
     return (await database.execute(sql, binds, database.options)).rows;
