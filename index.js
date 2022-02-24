@@ -1,8 +1,8 @@
 // configuring .env variables
 require('dotenv').config();
+const app = require('./app');
 
 const database = require('./DB-codes/database');
-const app = require('./app');
 
 // need to set this for oracledb connection pool
 process.env.UV_THREADPOOL_SIZE = 10;
