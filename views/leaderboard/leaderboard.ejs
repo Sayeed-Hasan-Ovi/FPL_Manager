@@ -34,7 +34,7 @@
                     <tbody>
                     <%for (let i = 0; i < player.length; i++) {%>
                     <tr>
-                        <td><a href="/leaderboard/<%=player[i].ID%>"><%=player[i].NAME%></a></td>
+                        <td><%=i+1%>. <a href="/leaderboard/<%=player[i].ID%>"><%=player[i].NAME%></a></td>
                         <td><%=player[i].POINTS%></td>
                     </tr>
                     <%}%>
