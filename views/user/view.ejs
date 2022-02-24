@@ -2,10 +2,33 @@
     <div class="col-md-6 m-auto">
         <div class="card card-body">
             <div class="container">
+                <% if (typeof (error) != 'undefined') { %>
+                <%for (let i=0; i<error.length; i++){%>
+                <div class="alert alert-dark" role="alert">
+                    <%=error[i].message%></div>
+                <%}%>
+                <% } %>
 
 
-
-
+                <h1 class="text-center mb-3">Team name: <i><%= team_name[0].NAME%></i></h1>
+                <h3 class="text-center mb-3">Manager: <i><%= username%></i></h3>
+                <form action="/user/view" method="POST">
+                    <div class="form-group">
+                        <label for="gw_date">
+                            Enter time
+                        </label>
+                        <input
+                                type="datetime-local"
+                                id="gw_date"
+                                name="gw_date"
+                                class="form-control"
+                                placeholder="Enter time"
+                        />
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn-info btn">View team</button>
+                    </div>
+                </form>
             </div>
 
         </div>

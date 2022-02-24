@@ -11,6 +11,13 @@ async function getAllPlayerStats(){
     let binds = {};
     return (await database.execute(sql, binds, database.options)).rows;
 }
+async function getGameweek(){
+    let sql = `
+        SELECT * from GAMEWEEK WHERE SYSDATE BETWEEN START_TIME AND END_TIME
+    `;
+    let binds = {};
+    return (await database.execute(sql, binds, database.options)).rows;
+}
 async function getPlayerStatById(p_id){
     let sql = `
         SELECT 
@@ -187,7 +194,18 @@ async function updateTotalPointsByFixtureId(p_id,fixture_id){
     };
     return (await database.execute(sql, binds, database.options));
 }
-
+async function calculateUserPoints(m_id,gw){
+    let sql = `
+        BEGIN
+            CALCULATE_USER_POINTS(:gw,:m_id);
+        END;
+    `;
+    let binds = {
+        m_id:m_id,
+        gw:gw
+    };
+    return (await database.execute(sql, binds, database.options));
+}
 
 
 
@@ -209,5 +227,7 @@ module.exports = {
     updateRedCardByFixtureId,
     updateYellowCardByFixtureId,
     updateCleanSheetByFixtureId,
-    updateTotalPointsByFixtureId
+    updateTotalPointsByFixtureId,
+    calculateUserPoints,
+    getGameweek
 }

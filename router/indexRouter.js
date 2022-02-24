@@ -13,6 +13,8 @@ const adminRouter= require('./admin/admin_router')
 const authRouter= require('./auth/authenticate')
 const userRouter= require('./user/user')
 const teamRouter= require('./team/team_router')
+const leaderboardRouter= require('./leaderboard/leaderboard')
+
 //
 // const rightPanelUtils = require('../utils/rightPanel-utils');
 
@@ -21,11 +23,10 @@ router.get('/', async (req, res) =>{
 
 
     // let rightPanel = await rightPanelUtils.getRightPanel(req.user);
-    const playerResult = await DB_player.getAllPlayers();
+    // const playerResult = await DB_player.getAllPlayers();
 
     res.render('layout.ejs', {
         title: 'Fantasy Premier League',
-        players:playerResult,
         body : 'homepage'
     });
 });
@@ -36,6 +37,7 @@ router.use('/admin', adminRouter);
 router.use('/auth', authRouter);
 router.use('/user',auth.authenticated, userRouter);
 router.use('/team', teamRouter);
+router.use('/leaderboard',leaderboardRouter)
 
 
 module.exports = router

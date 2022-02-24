@@ -7,6 +7,8 @@
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="/player">Player</a></li>
                 <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
+
+                <li class="nav-item"><a class="nav-link" href="/leaderboard">Leaderboard</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -20,3 +22,24 @@
         </div>
     </div>
 </nav>
+<% for (let i = 0; i < 15; i++) {%>
+    <h1> </h1>
+<%}%>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            Featured
+        </div>
+        <div class="card-body">
+            <img src="images/04.jpg" class="d-block w-100" alt="0">
+            <% for (let i = 0; i < 5; i++) {%>
+                <h1> </h1>
+            <%}%>
+
+            <h5 class="card-title">Who will win the League?</h5>
+            <p class="card-text">Title race heats up as City suffer a loss by the hands of the man they could not get in the summer last year.</p>
+        </div>
+    </div>
+</div>
+

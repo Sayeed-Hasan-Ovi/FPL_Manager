@@ -1,0 +1,30 @@
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <div class="card card-body">
+            <div class="container">
+
+
+                <h1 class="text-center mb-3">Current team name: <i><%= team_name[0].NAME%></i></h1>
+                <h3 class="text-center mb-3">Manager: <i><%= username%></i></h3>
+                <form action="/user/edit_team_name" method="POST">
+                    <div class="form-group">
+                        <label for="new_name">
+                            Enter new name
+                        </label>
+                        <input
+                                type="text"
+                                id="new_name"
+                                name="new_name"
+                                class="form-control"
+                                placeholder="Enter new name"
+                        />
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn-info btn">Rename team</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
