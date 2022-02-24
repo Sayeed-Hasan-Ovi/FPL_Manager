@@ -12,10 +12,10 @@ function validate(passport){
                 const user = query_result[0];
                 // console.log(user);
                 if (user.PASSWORD===password){
-                    console.log('password match')
+                    // console.log('password match')
                     return done(null, user);
                 }else {
-                    console.log('password wrong')
+                    // console.log('password wrong')
                     return done(null, false)
                 }
             }else {

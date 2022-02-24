@@ -7,16 +7,21 @@ const db_manager= require('../../DB-codes/db_manager_api')
 const {getGameweek} = require("../../DB-codes/db_player_stat_api");
 const moment = require("moment");
 const {getDrafted, getManagedTeamName} = require("../../DB-codes/db_manager_api");
-const {getPlayerById} = require("../../DB-codes/db_player_api");
+const {getPlayerById, getTeamByPlayerId} = require("../../DB-codes/db_player_api");
+const DB_player = require("../../DB-codes/db_player_api");
 
 
 
 router.get('/', async (req, res) => {
+    const team_name = await getManagedTeamName(req.user.ID)
+    const points_till_now=team_name[0].POINTS;
+
     res.render('layout.ejs',{
         title: 'User profile',
         body: 'user/home',
         username: req.user.NAME,
-        userid: req.user.ID
+        userid: req.user.ID,
+        points_till_now
     })
 });
 
@@ -31,7 +36,7 @@ router.get('/edit', async (req, res) => {
 });
 
 router.post('/edit',async(req, res)=>{
-    console.log(req.body);
+    // console.log(req.body);
     let {param}=req.body;
     const frm=param
     res.redirect('/user/select?frm='+frm)
@@ -214,9 +219,9 @@ router.post('/select', async (req,res)=>{
         total_cost+=player_data[i][0].CURRENT_PRICE
     }
 
-    console.log(total_cost)
+    // console.log(total_cost)
 
-    if(total_cost>45) //change korte hobe
+    if(total_cost>75) //change korte hobe
         error.push({
             message: 'You have exceeded your gameweek balance'
         })
@@ -234,10 +239,27 @@ router.post('/select', async (req,res)=>{
     const gw_id=gameweek_data[0].GW_ID
 
     const team_inserted= await db_manager.insertIntoDrafted(req.user.ID,gw_id , '2021-2022', player_data[1][0].ID, player_data[2][0].ID, player_data[3][0].ID, player_data[4][0].ID, player_data[5][0].ID, player_data[6][0].ID, player_data[7][0].ID, player_data[8][0].ID, player_data[9][0].ID, player_data[10][0].ID, player_data[0][0].ID)
+    const team_name = await getManagedTeamName(req.user.ID)
+
+    if (typeof team_inserted === 'undefined') {
+        error.push({
+            message: 'You have a team picked for this gameweek'
+        })
+        return res.render('layout.ejs',{
+        title: 'User team ',
+        body: 'user/view',
+        username:req.user.NAME,
+        team_name:team_name,
+        error
+    });
+    }
 
     if (team_inserted.rowsAffected === 1){
-        return res.redirect('/user/view_team');
+        return res.redirect('/user/view');
     }
+
+
+
     error.push({
         message: 'Some database error occurred'
     })
@@ -260,11 +282,42 @@ router.post('/select', async (req,res)=>{
 
 router.get('/view', async (req, res) => {
     // console.log("received request from user.js")
+    let error=[]
+    const team_name = await getManagedTeamName(req.user.ID)
+    // console.log(team_name)
     res.render('layout.ejs',{
         title: 'User team ',
         body: 'user/view',
-        username:req.user.NAME
+        username:req.user.NAME,
+        team_name:team_name,
+        error
     })
+});
+
+router.get('/edit_team_name', async (req, res) => {
+    // console.log("received request from user.js")
+    const team_name = await getManagedTeamName(req.user.ID)
+    // console.log(team_name)
+    res.render('layout.ejs',{
+        title: 'User team name edit ',
+        body: 'user/edit_team_name',
+        username:req.user.NAME,
+        team_name:team_name
+    })
+});
+
+router.post('/edit_team_name', async (req, res) => {
+    // console.log("received request from user.js")
+    let {new_name}= req.body
+    const team_name = await db_manager.updateManagedTeamName(req.user.ID, new_name)
+    if (team_name.rowsAffected!==1)
+        res.render('layout.ejs',{
+        title: 'User team name edit ',
+        body: 'user/edit_team_name',
+        username:req.user.NAME,
+        team_name:team_name
+    })
+    res.redirect('/user/')
 });
 
 
@@ -272,55 +325,72 @@ router.get('/view', async (req, res) => {
 
 router.post('/view', async (req, res) => {
     // console.log("received request from user.js")
-    let{date}=req.body
-    date = moment.utc(date).format('yyyy-MM-DD HH:mm');
-    // console.log(date, req.user.ID)
-    // const drafted_players = await getDrafted(req.user.ID, date)
-    // console.log(date, req.user.ID)
-    // const team_name = await getManagedTeamName(req.user.ID)
+    let{gw_date}=req.body
+    gw_date = moment.utc(gw_date).format('yyyy-MM-DD HH:mm');
+    // console.log(gw_date, req.user.ID)
+    const team_name = await getManagedTeamName(req.user.ID)
+    // console.log(team_name)
+    const drafted_players = await getDrafted(gw_date, req.user.ID)
+    // console.log(gw_date, req.user.ID, drafted_players)
+
+    const player_name1 = await getPlayerById(drafted_players[0].P1_ID)
+    // console.log(player_name1)
+
+    const player_name2 = await getPlayerById(drafted_players[0].P2_ID)
     // console.log(1)
-    // const player_name1 = await getPlayerById(drafted_players[0].P1_ID)
+    const player_name3 = await getPlayerById(drafted_players[0].P3_ID)
     // console.log(1)
-    //
-    // const player_name2 = await getPlayerById(drafted_players[0].P2_ID)
+    const player_name4 = await getPlayerById(drafted_players[0].P4_ID)
     // console.log(1)
-    // const player_name3 = await getPlayerById(drafted_players[0].P3_ID)
+    const player_name5 = await getPlayerById(drafted_players[0].P5_ID)
     // console.log(1)
-    // const player_name4 = await getPlayerById(drafted_players[0].P4_ID)
+    const player_name6 = await getPlayerById(drafted_players[0].P6_ID)
     // console.log(1)
-    // const player_name5 = await getPlayerById(drafted_players[0].P5_ID)
+    const player_name7 = await getPlayerById(drafted_players[0].P7_ID)
     // console.log(1)
-    // const player_name6 = await getPlayerById(drafted_players[0].P6_ID)
+    const player_name8 = await getPlayerById(drafted_players[0].P8_ID)
     // console.log(1)
-    // const player_name7 = await getPlayerById(drafted_players[0].P7_ID)
+    const player_name9 = await getPlayerById(drafted_players[0].P9_ID)
     // console.log(1)
-    // const player_name8 = await getPlayerById(drafted_players[0].P8_ID)
+    const player_name10 = await getPlayerById(drafted_players[0].P10_ID)
     // console.log(1)
-    // const player_name9 = await getPlayerById(drafted_players[0].P9_ID)
+    const player_name11 = await getPlayerById(drafted_players[0].P11_ID)
     // console.log(1)
-    // const player_name10 = await getPlayerById(drafted_players[0].P10_ID)
-    // console.log(1)
-    // const player_name11 = await getPlayerById(drafted_players[0].P11_ID)
-    // console.log(1)
+    const points_till_now=team_name[0].POINTS;
+
+    let player=[]
+
+    player.push(player_name11[0])
+    player.push(player_name1[0])
+    player.push(player_name2[0])
+    player.push(player_name3[0])
+    player.push(player_name4[0])
+    player.push(player_name5[0])
+    player.push(player_name6[0])
+    player.push(player_name7[0])
+    player.push(player_name8[0])
+    player.push(player_name9[0])
+    player.push(player_name10[0])
+
+    let team = []
+    for (let i = 0; i < 11; i++) {
+        team.push(await DB_player.getTeamByPlayerId(player[i].ID));
+    }
 
     res.render('layout.ejs',{
-        title: 'User team ',
-        body: 'user/view',
+        title: 'View '+team_name+' team ',
+        body: 'user/view_team',
         username: req.user.NAME,
-        team_name:team_name[0].NAME,
-        p1:player_name1[0],
-        p2:player_name2[0],
-        p3:player_name3[0],
-        p4:player_name4[0],
-        p5:player_name5[0],
-        p6:player_name6[0],
-        p7:player_name7[0],
-        p8:player_name8[0],
-        p9:player_name9[0],
-        p10:player_name10[0],p11:player_name11[0]
+        team_name:team_name,
+        player,
+        points_till_now,
+        team:team
+
 
     })
 });
+
+
 
 
 

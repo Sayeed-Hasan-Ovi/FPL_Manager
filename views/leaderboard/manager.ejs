@@ -1,20 +1,35 @@
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="/"><img src="https://www.nicepng.com/png/full/340-3408253_premier-league-transparent-png-barclays-premier-league-logo.png" width="40" height="40"> Fantasy Premier League</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="/team">All teams</a></li>
+                <li class="nav-item"><a class="nav-link" href="/">Go back to Home</a></li>
             </ul>
         </div>
     </div>
 </nav>
 
+
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
-        <div class="container">
-            <div class="card shadow m-2 p-2">
-                <h3 align="center">Team name: <%=team.NAME%></h3>
+
+
+        <p class="text mt-4" align="right"><a href="/leaderboard/">Back to leaderboard</a>
+        <div class="card card-body">
+
+            <div class="container">
+
+
+                <h1 class="text-center mb-3">Team name: <i><%= team_name[0].NAME%></i></h1>
+<!--                <h3 class="text-center mb-3">Manager: <i></i></h3>-->
+
+                <p align="center">Total points now: <i><%= points_till_now%></i></p>
+
+
+                <% if (typeof (player[0]) != 'undefined') { %>
+
                 <table id="dtBasicExample" class="table table-striped table-bordered table-sm">
                     <thead>
                     <tr>
@@ -22,18 +37,24 @@
                         </th>
                         <th class="th-sm">Position
                         </th>
+                        <th class="th-sm">Team
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
                     <%for (let i = 0; i < player.length; i++) {%>
+
                     <tr>
                         <td><a href="/player/<%=player[i].ID%>"><%=player[i].FIRST_NAME%> <%=player[i].LAST_NAME%></a></td>
                         <td><%=player[i].POSITION%></td>
+                        <td><% if (typeof (team[i][0]) != 'undefined') { %><%=team[i][0].NAME%><%}else {%>N/A<%}%>%> </td>
                     </tr>
+                    <%}%>
                     <%}%>
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
 </div>

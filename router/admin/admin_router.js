@@ -32,7 +32,7 @@ router.get('/update_points', async (req, res) => {
 router.post('/update_points', async (req, res) => {
     let {gw}=req.body
     const all_manager=await db_manager.getAllManager()
-    console.log(all_manager[0].M_ID)
+    // console.log(all_manager[0].M_ID)
 
     for (let i = 0; i < all_manager.length; i++) {
         const points_totalled = await db_player_stat.calculateUserPoints(all_manager[i].M_ID, gw)
@@ -540,7 +540,7 @@ router.post('/update_fixture', async (req, res) => {
 //insert player
 
 router.get('/insert_player', async (req, res) => {
-    console.log(req.query)
+    // console.log(req.query)
     res.render('layout.ejs', {
         title: 'Insert Player',
         body: 'admin/insert_player'
@@ -696,7 +696,7 @@ router.post('/update_price', async (req, res) => {
     // console.log(first_name, last_name, team_name, season, position)
 
     const price_updated= await db_player.updatePrice(player_exists[0].ID, season, price)
-console.log(price_updated.rowsAffected)
+// console.log(price_updated.rowsAffected)
     if (price_updated.rowsAffected > 0){
         return res.redirect('/admin');
     }

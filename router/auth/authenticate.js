@@ -21,7 +21,7 @@ router.get('/login', (req, res) => {
 
 router.post('/register', async (req, res) => {
     const {name, password, password2} = req.body;
-    console.log(req.body)
+    // console.log(req.body)
     let errors = [];
 
     if (!name || !password || !password2) {
@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
     }
 
     if (errors.length > 0) {
-        console.log(errors)
+        // console.log(errors)
         res.render('layout.ejs', {
             title: 'Register',
             body: 'auth/register',

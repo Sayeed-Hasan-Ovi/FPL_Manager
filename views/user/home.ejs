@@ -10,10 +10,19 @@
     </div>
 </nav>
 <div class="container">
-<h1>this is user <%= userid%> home</h1>
-<h2><%= username %></h2>
 
-<p class="lead mt-4"><a href="/user/view">View Team</a>
+    <h1 class="text-center mb-3"><u>User Home</u></h1>
 
-<p class="lead mt-4"><a href="/user/edit">Edit Team</a>
+<!--    <h1 class="text-center mb-3"><i><</i></h1>-->
+    <h3 class="text-center mb-3">Manager: <i><%= username%></i></h3>
+    <p align="center">Total points now: <i><%= points_till_now%></i></p>
+
+
+    <p class="lead mt-4"><a href="/user/view">View Team</a>
+
+    <p class="lead mt-4"><a href="/user/edit">Edit Team</a>
+
+    <p class="lead mt-4"><a href="/user/edit_team_name">Edit Team name</a>
+
+
 </div>
